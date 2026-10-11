@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-import os
 
 # -----------------------------------------------------------------------------
 # 1. PAGE CONFIG & BRUNSWICK EMERALD ULTRA-BOLD THEME
@@ -116,20 +115,6 @@ st.markdown("""
         border: 2px solid #FFFFFF !important;
     }
 
-    /* File Uploader Container Box Styling */
-    div[data-testid="stFileUploader"] {
-        background-color: #062822;
-        padding: 20px;
-        border-radius: 16px;
-        border: 2px solid #06D6A0;
-    }
-    div[data-testid="stFileUploader"] label {
-        color: #FFFFFF !important;
-        font-size: 18px !important;
-        font-weight: 900 !important;
-        font-style: italic !important;
-    }
-
     /* Individual Angle Rectangle Cards */
     .angle-card {
         background: #0C4137;
@@ -177,26 +162,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# 2. AUTO-PATH DETECTION REAL CSV LOADER
+# 2. ELITE SQUAD DATABASE (STANDALONE & LIGHTWEIGHT)
 # -----------------------------------------------------------------------------
-@st.cache_data
-def load_data():
-    possible_paths = [
-        os.path.join("archive (5)", "ipl_ball_by_ball_clean.csv"),
-        os.path.join("archive (5)", "ipl_ball_by_ball.csv"),
-        "ipl_ball_by_ball_clean.csv",
-        "ipl_ball_by_ball.csv"
-    ]
-    for path in possible_paths:
-        if os.path.exists(path):
-            try:
-                df = pd.read_csv(path)
-                return df
-            except Exception:
-                continue
-    return None
-
-df = load_data()
+squad_players = [
+    "Nitish Kumar Reddy", "Virat Kohli", "Rohit Sharma", "MS Dhoni", 
+    "Jasprit Bumrah", "Hardik Pandya", "Ravindra Jadeja", "Travis Head", 
+    "Abhishek Sharma", "Heinrich Klaasen", "Pat Cummins", "Rishabh Pant"
+]
 
 # -----------------------------------------------------------------------------
 # 3. SIDEBAR SEARCH BAR & ATHLETE SELECTION
@@ -206,26 +178,16 @@ with st.sidebar:
     st.markdown("<p style='color:#FFFFFF; font-weight:900; font-size:14px;'>MONESTRA TELEMETRY LIVE ⚡</p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    if df is not None:
-        b_cols = [c for c in df.columns if 'batter' in c.lower() or 'batsman' in c.lower() or 'player' in c.lower()]
-        b_col = b_cols[0] if b_cols else df.columns[0]
+    search_query = st.text_input("🔍 SEARCH ATHLETE", "Nitish")
+    
+    filtered_players = [p for p in squad_players if search_query.lower() in p.lower()]
+    if not filtered_players:
+        filtered_players = squad_players
         
-        all_players = sorted([str(p) for p in df[b_col].dropna().unique()])
-        
-        search_query = st.text_input("🔍 SEARCH ATHLETE", "Nitish")
-        
-        filtered_players = [p for p in all_players if search_query.lower() in p.lower()]
-        if not filtered_players:
-            filtered_players = all_players
-            
-        selected_player = st.selectbox(
-            "SELECT ATHLETE PROFILE",
-            filtered_players
-        )
-    else:
-        st.warning("⚠️ CSV dataset connecting...")
-        selected_player = "Nitish Kumar Reddy"
-        b_col = "batter"
+    selected_player = st.selectbox(
+        "SELECT ATHLETE PROFILE",
+        filtered_players
+    )
 
     st.markdown("---")
     st.markdown("<p style='color:#06D6A0; font-weight:900; font-style:italic; font-size:16px;'>VCAS-19 • Sri Saakya 🚀</p>", unsafe_allow_html=True)
@@ -248,33 +210,14 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# 5. 100% ROBUST DYNAMIC PLAYER METRICS & HASH SYNC
+# 5. DYNAMIC PLAYER METRICS & HASH SYNC
 # -----------------------------------------------------------------------------
 p_seed = abs(hash(selected_player))
 
-if df is not None and b_col in df.columns:
-    p_df = df[df[b_col].astype(str).str.lower() == selected_player.lower()]
-    r_cols = [c for c in df.columns if 'runs' in c.lower() or 'batsman_runs' in c.lower()]
-    r_col = r_cols[0] if r_cols else None
-    
-    if not p_df.empty and r_col:
-        total_runs = int(p_df[r_col].sum())
-        balls = len(p_df)
-        sr = round((total_runs / balls) * 100, 2) if balls > 0 else 142.5
-    else:
-        total_runs = 450 + (p_seed % 1200)
-        balls = 300 + (p_seed % 500)
-        sr = round(130.0 + (p_seed % 35), 2)
-else:
-    p_df = pd.DataFrame()
-    r_col = None
-    total_runs = 845
-    balls = 520
-    sr = 162.5
-
-# Unique Biomechanical Height & Injury Index per player
-release_apex = round(2.05 + ((p_seed % 20) / 100), 2)
-injury_index = round(1.5 + ((p_seed % 15) / 10), 1)
+total_runs = 650 + (p_seed % 1400)
+sr = round(135.0 + (p_seed % 42), 2)
+release_apex = round(2.05 + ((p_seed % 22) / 100), 2)
+injury_index = round(1.4 + ((p_seed % 18) / 10), 1)
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -332,7 +275,7 @@ with tab1:
         st.markdown(f'<div class="section-title">📊 {selected_player}: Match Runs Progression</div>', unsafe_allow_html=True)
         
         bar_x = ["Match 1", "Match 2", "Match 3", "Match 4", "Match 5", "Match 6"]
-        bar_y = [(p_seed % (i*17 + 12)) + 15 for i in range(6)]
+        bar_y = [(p_seed % (i*19 + 14)) + 18 for i in range(6)]
 
         fig1 = go.Figure(go.Bar(
             x=bar_x, y=bar_y,
@@ -353,7 +296,7 @@ with tab1:
         st.markdown('<div class="section-card">', unsafe_allow_html=True)
         st.markdown(f'<div class="section-title">📊 {selected_player}: Scoring Density Histogram</div>', unsafe_allow_html=True)
         
-        hist_data = [(p_seed % (i*7 + 5)) + (i*4) for i in range(35)]
+        hist_data = [(p_seed % (i*8 + 6)) + (i*5) for i in range(35)]
 
         fig2 = go.Figure(go.Histogram(
             x=hist_data,
@@ -398,7 +341,6 @@ with tab3:
     with vcol1:
         st.markdown("### 📤 **Upload Bowling Footage (.mp4 / .mov)**")
         
-        # Crystal Clear File Uploader Container
         uploaded_video = st.file_uploader(f"SELECT FOOTAGE FOR {selected_player.upper()}", type=["mp4", "mov"], key=f"vid_{selected_player}")
         
         if uploaded_video is not None:
