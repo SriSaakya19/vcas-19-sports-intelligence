@@ -145,7 +145,7 @@ st.markdown("""
         font-weight: 800;
     }
 
-    /* Sidebar Ultra-Thick Boldest White Aesthetic Typography & Search Bar */
+    /* Sidebar Styling */
     section[data-testid="stSidebar"] {
         background-color: #041411;
         border-right: 2px solid #0C4137;
@@ -153,7 +153,7 @@ st.markdown("""
     section[data-testid="stSidebar"] label {
         color: #FFFFFF !important;
         font-weight: 900 !important;
-        font-size: 20px !important;
+        font-size: 18px !important;
         font-style: italic !important;
         letter-spacing: 1px;
         text-transform: uppercase;
@@ -162,35 +162,58 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# 2. ELITE SQUAD DATABASE (STANDALONE & LIGHTWEIGHT)
+# 2. COMPLETE UNRESTRICTED INDIAN INTERNATIONAL SQUAD LIST
 # -----------------------------------------------------------------------------
-squad_players = [
-    "Nitish Kumar Reddy", "Virat Kohli", "Rohit Sharma", "MS Dhoni", 
-    "Jasprit Bumrah", "Hardik Pandya", "Ravindra Jadeja", "Travis Head", 
-    "Abhishek Sharma", "Heinrich Klaasen", "Pat Cummins", "Rishabh Pant"
-]
+indian_squad = sorted([
+    "Nitish Kumar Reddy",
+    "Rohit Sharma",
+    "Virat Kohli",
+    "Jasprit Bumrah",
+    "Hardik Pandya",
+    "Ravindra Jadeja",
+    "Rishabh Pant",
+    " यशस्वी Jaiswal (Yashasvi Jaiswal)",
+    "Shubman Gill",
+    "KL Rahul",
+    "Suryakumar Yadav",
+    "Axar Patel",
+    "Kuldeep Yadav",
+    "Mohammed Siraj",
+    "Arshdeep Singh",
+    "Shreyas Iyer",
+    "Sanju Samson",
+    "Rinku Singh",
+    "Washington Sundar",
+    "Axar Patel",
+    "Yuzvendra Chahal",
+    "Mukesh Kumar",
+    "Ravi Bishnoi",
+    "Shivam Dube",
+    "Jitesh Sharma",
+    "Tilak Varma",
+    "Prasidh Krishna",
+    "Avesh Khan"
+])
+
+# Remove duplicates if any from sorting/formatting
+indian_squad = sorted(list(set(indian_squad)))
 
 # -----------------------------------------------------------------------------
-# 3. SIDEBAR SEARCH BAR & ATHLETE SELECTION
+# 3. SIDEBAR ATHLETE DROPDOWN SELECTION (NO SEARCH BAR)
 # -----------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("<h2 style='color:#06D6A0; font-weight:900; font-style:italic; font-size:26px; margin-bottom:0px;'>🇮🇳 SQUAD INTEL</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='color:#FFFFFF; font-weight:900; font-size:14px;'>MONESTRA TELEMETRY LIVE ⚡</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color:#06D6A0; font-weight:900; font-style:italic; font-size:24px; margin-bottom:0px;'>🇮🇳 TEAM INDIA SQUAD</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#FFFFFF; font-weight:900; font-size:13px;'>MONESTRA TELEMETRY LIVE ⚡</p>", unsafe_allow_html=True)
     st.markdown("---")
     
-    search_query = st.text_input("🔍 SEARCH ATHLETE", "Nitish")
-    
-    filtered_players = [p for p in squad_players if search_query.lower() in p.lower()]
-    if not filtered_players:
-        filtered_players = squad_players
-        
     selected_player = st.selectbox(
         "SELECT ATHLETE PROFILE",
-        filtered_players
+        indian_squad,
+        index=indian_squad.index("Nitish Kumar Reddy") if "Nitish Kumar Reddy" in indian_squad else 0
     )
 
     st.markdown("---")
-    st.markdown("<p style='color:#06D6A0; font-weight:900; font-style:italic; font-size:16px;'>VCAS-19 • Sri Saakya 🚀</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#06D6A0; font-weight:900; font-style:italic; font-size:15px;'>VCAS-19 • Sri Saakya 🚀</p>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
 # 4. HERO SECTION
@@ -214,10 +237,10 @@ st.markdown(f"""
 # -----------------------------------------------------------------------------
 p_seed = abs(hash(selected_player))
 
-total_runs = 650 + (p_seed % 1400)
-sr = round(135.0 + (p_seed % 42), 2)
-release_apex = round(2.05 + ((p_seed % 22) / 100), 2)
-injury_index = round(1.4 + ((p_seed % 18) / 10), 1)
+total_runs = 850 + (p_seed % 2400)
+sr = round(135.0 + (p_seed % 48), 2)
+release_apex = round(2.05 + ((p_seed % 25) / 100), 2)
+injury_index = round(1.3 + ((p_seed % 20) / 10), 1)
 
 col1, col2, col3, col4 = st.columns(4)
 
@@ -260,7 +283,7 @@ with col4:
 st.write("")
 
 # -----------------------------------------------------------------------------
-# 6. MULTI-TAB ARCHITECTURE WITH CRYSTAL CLEAR TABS & DYNAMIC DATA
+# 6. MULTI-TAB ARCHITECTURE
 # -----------------------------------------------------------------------------
 tab1, tab2, tab3 = st.tabs([
     "📊 TACTICAL TELEMETRY & GRAPHS", 
